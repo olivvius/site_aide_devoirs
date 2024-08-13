@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Utilisateurs</title>
+    <!-- Inclusion de Bootstrap CSS -->
+    {% include 'accounts/base_style.html' %}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between mb-3">
+            <div>
+                <a href="{% url 'admin' %}" class="btn btn-info me-2">Tableau de bord admin</a>
+                <a href="{% url 'exercises_to_correct' %}" class="btn btn-info me-2">Exercices à corriger</a>
+                <a href="{% url 'corrected_exercises' %}" class="btn btn-info me-2">Exercices corrigés</a>
+                <a href="{% url 'user_profiles_list' %}" class="btn btn-info">Liste des utilisateurs</a>
+            </div>
+        </div>
+        <h2>Liste des Utilisateurs</h2>
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nom d'utilisateur</th>
+                    <th>Adresse e-mail</th>
+                    <th>Nom complet</th>
+                    <th>Nom parent</th>
+                    <th>Date d'inscription</th>
+                    <th>Exercices postés</th>
+                    <th>Exercices corrigés</th>
+                    <th>Crédits restants</th>
+                    <th>Modifier crédits</th>
+                    <th>est actif ?</th>
+                    <th>modifier</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user_profile in profiles %}
+                <tr>
+                    <td>{{ user_profile.user.id }}</td>
+                    <td>{{ user_profile.user.username }}</td>
+                    <td>{{ user_profile.user.email }}</td>
+                    <td>{{ user_profile.user.first_name }} {{ user_profile.user.last_name }}</td>
+                    <td>{{ user_profile.parent_first_name }} {{ user_profile.parent_last_name }}</td>
+                    <td>{{ user_profile.user.date_joined|date:"d/m/Y à H:i" }}</td>
+                    <td>{{ user_profile.exercise_count }}</td>
+                    <td>{{ user_profile.corrected_exercise_count }}</td>
+                    <td>{{ user_profile.credits }}</td>
+                    <td>
+                        <form action="{% url 'increment_credits' user_profile.user.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-sm">+</button>
+                        </form>
+                        <form action="{% url 'decrement_credits' user_profile.user.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">-</button>
+                        </form>
+                    </td>
+                    <td>{{ user_profile.user.is_active|yesno:'Actif,Inactif' }}</td>
+                    <td>
+                        <form action="{% url 'toggle_active' user_profile.user.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn {{ user_profile.user.is_active|yesno:'btn-danger,btn-success' }} btn-sm">
+                                {{ user_profile.user.is_active|yesno:'Desactiver,Activer' }}
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- Inclusion de Bootstrap JS et des dépendances -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

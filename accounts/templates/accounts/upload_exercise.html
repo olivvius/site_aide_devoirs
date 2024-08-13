@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uploader un exercice</title>
+    <!-- Incorporation de Bootstrap via un CDN alternatif -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <!-- Styles personnalisés après Bootstrap pour éviter les conflits -->
+    {% include 'accounts/base_style.html' %}
+</head>
+<body>
+    <div class="container mt-4">
+        <h2 class="mb-3">Bienvenue sur votre tableau de bord {{ user.username }} ! Vous avez {{ user.profile.credits }} crédits !</h2>
+        <div class="d-flex justify-content-between mb-3">
+            <a href="{% url 'dashboard' %}" class="btn btn-info">Retour au dashboard</a>
+            <a href="{% url 'personal_infos' %}" class="btn btn-info">Accès info persos</a>
+            <form action="{% url 'logout' %}" method="post" class="form-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-info">Se déconnecter</button>
+            </form>
+        </div>
+    <div class="container mt-4">
+        <h2 class="mb-4">Demander une correction</h2>
+        
+        <!-- Affichage des messages d'erreur -->
+        {% if error_message %}
+            <div class="alert alert-danger" role="alert">
+                {{ error_message }}
+            </div>
+        {% endif %}
+        
+        <!-- Formulaire upload fichier -->
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
+                {{ form.title }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.text.id_for_label }}">{{ form.text.label }}</label>
+                {{ form.text }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.photo_statement.id_for_label }}">{{ form.photo_statement.label }}</label>
+                {{ form.photo_statement }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.photo_answer.id_for_label }}">{{ form.photo_answer.label }}</label>
+                {{ form.photo_answer }}
+            </div>
+            <button type="submit" class="btn btn-info">Soumettre</button>
+        </form>
+    </div>
+    <!-- jQuery et Popper.js via CDN obligatoire pour certains éléments de Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détail de l'Exercice</title>
+    {% include 'accounts/base_style.html' %}
+
+    <!-- Inclusion de Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <a href="{% url 'dashboard' %}" class="btn btn-info">Retour au dashboard</a>
+        <div class="card">
+            <div class="card-header">
+                <h2>{{ exercise.title }}</h2>
+            </div>
+            <div class="card-body">
+                <p>{{ exercise.text }}</p>
+                <form action="{% url 'update_photos' exercise.id %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h4>Énoncé</h4>
+                            {% if exercise.photo_statement %} 
+                                <img src="{{ exercise.photo_statement.url }}" alt="Photo de l'énoncé" class="img-fluid img-thumbnail">
+                            {% else %}
+                                <p>Aucune photo d'énoncé disponible.</p>
+                            {% endif %}
+                            <label for="id_photo_statement">Modifier l'énoncé</label>
+                            <input type="file" name="photo_statement" id="id_photo_statement">
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Réponse</h4>
+                            {% if exercise.photo_answer %}
+                                <img src="{{ exercise.photo_answer.url }}" alt="Photo de la réponse" class="img-fluid img-thumbnail">
+                            {% else %}
+                                <p>Pas de réponse.</p>
+                            {% endif %}
+                            <label for="id_photo_answer">Modifier la réponse</label>
+                            <input type="file" name="photo_answer" id="id_photo_answer">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-info">modifier les photos</button>
+                </form>
+                <p><strong>Corrigé:</strong> {{ exercise.corrected|yesno:"Oui,Non" }}</p>
+                <!-- Section de Correction -->
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <h4>Texte de correction</h4>
+                        <p>{{ exercise.text_correction }}</p>
+                    </div>
+                    <div class="col-md-12">
+                        <h4>Photo de correction</h4>
+                        {% if exercise.photo_correction %}
+                            <img src="{{ exercise.photo_correction.url }}" alt="Photo de correction" class="img-fluid img-thumbnail">
+                        {% else %}
+                            <p>Pas de photo de correction.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Inclusion de Bootstrap JS et des dépendances -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

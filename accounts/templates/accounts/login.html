@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    {% include 'accounts/base_style.html' %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container text-center">
+        <h2 class="mt-5">Login</h2>
+        <form method="post" class="mt-4">
+            {% csrf_token %}
+            <div>
+            {{ form.username}}
+            </div>
+            <br></br>
+            <div>
+            {{ form.password}}
+            </div>
+            <br></br>
+            {% if errors %}
+                <p class="text-danger">{{ errors }}</p>
+            {% endif %}
+            {% if form.errors %}
+                <ul class="text-danger">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <button type="submit" class="btn btn-info">Login</button>
+        </form>
+        <p class="mt-3">Pas encore inscrit ? <a href="{% url 'register' %}">S'inscrire</a></p>    </div>
+</body>
+</html>
