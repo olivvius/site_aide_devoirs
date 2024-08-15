@@ -17,6 +17,110 @@ def get_image_file(name='test.jpg', ext='jpeg', size=(100, 100), color=(256, 0, 
     file.seek(0)
     return file
 
+class RegistrationTestCase(TestCase):
+    def setUp(self):
+        self.url = reverse('register')  # Assurez-vous que l'URL 'register' est définie dans vos urls.py
+        User.objects.create_user(username='existinguser', email='existing@example.com', password='test1234')
+        User.objects.create_user(username='existingemailuser', email='existingemail@example.com', password='test1234')
+
+    def test_get_register_page(self):
+        # Teste l'accès à la page d'inscription via une requête GET
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'accounts/register.html')  # Assurez-vous que le template est correctement nommé
+
+    def test_successful_registration(self):
+        data = {
+            'username': 'newuser',
+            'email': 'user@example.com',
+            'first_name': 'Test',
+            'last_name': 'User',
+            'password1': 'complexpassword123',
+            'password2': 'complexpassword123',
+            'parent_first_name': 'Parent',
+            'parent_last_name': 'Test',
+            'current_class': '5e',  # Assurez-vous que cette classe existe dans votre modèle
+        }
+        response = self.client.post(self.url, data)
+        self.assertRedirects(response, reverse('registration_pending'))  # Ou toute autre URL de redirection que vous avez configurée
+        user = User.objects.get(username='newuser')
+        self.assertFalse(user.is_active)  # Vérifiez si l'utilisateur n'est pas actif par défaut comme spécifié dans votre save()
+
+    # Ajout du test pour un nom d'utilisateur déjà existant
+    def test_registration_with_existing_username(self):
+        # Données avec un nom d'utilisateur qui existe déjà
+        data = {
+            'username': 'existinguser',
+            'email': 'newemail@example.com',  # Un nouvel email pour éviter des conflits d'email
+            'first_name': 'Test',
+            'last_name': 'User',
+            'password1': 'newcomplexpassword123',
+            'password2': 'newcomplexpassword123',
+            'parent_first_name': 'Parent',
+            'parent_last_name': 'Test',
+            'current_class': '5e',
+        }
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 200)
+        
+        # Vérifiez si le formulaire est passé dans le contexte et a des erreurs
+        if 'form' in response.context:
+            form = response.context['form']
+            # Vérification que le champ username a une erreur spécifique
+            self.assertTrue(form.has_error('username'))
+            self.assertIn('Un utilisateur avec ce nom existe déjà.', form.errors['username'])
+        else:
+            self.fail("Le formulaire n'est pas disponible dans le context de la réponse.")
+
+    def test_registration_with_existing_email(self):
+            # Données avec un email qui existe déjà
+            data = {
+                'username': 'newuser',
+                'email': 'existingemail@example.com',
+                'first_name': 'Test',
+                'last_name': 'User',
+                'password1': 'newcomplexpassword123',
+                'password2': 'newcomplexpassword123',
+                'parent_first_name': 'Parent',
+                'parent_last_name': 'Test',
+                'current_class': '5e',
+            }
+            response = self.client.post(self.url, data)
+            self.assertEqual(response.status_code, 200)
+            
+            # Vérifiez si le formulaire est passé dans le contexte et a des erreurs
+            if 'form' in response.context:
+                form = response.context['form']
+                # Vérification que le champ email a une erreur spécifique
+                self.assertTrue(form.has_error('email'))
+                self.assertIn('Un utilisateur avec cette adresse e-mail existe déjà.', form.errors['email'])
+            else:
+                self.fail("Le formulaire n'est pas disponible dans le contexte de la réponse.")
+
+    def test_failed_registration_due_to_invalid_data(self):
+        # Test d'une soumission avec données invalides (ex: mots de passe non concordants)
+        data = {
+            'username': 'testuser',
+            'email': 'email@example.com',
+            'first_name': 'Test',
+            'last_name': 'User',
+            'password1': 'complexpassword123',
+            'password2': 'anotherpassword',
+            'parent_first_name': 'Parent',
+            'parent_last_name': 'Test',
+            'current_class': '5',
+        }
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('Les deux mots de passe ne correspondent pas.' in response.context['form'].errors['password2'])  # Exemple, adaptez selon votre validation
+
+    def test_form_display_with_initial_values_on_GET_request(self):
+        # Vérifie que le formulaire est correctement initialisé avec des valeurs par défaut vides
+        response = self.client.get(self.url)
+        form = response.context['form']
+        self.assertIsNone(form['username'].value())
+        self.assertIsNone(form['email'].value())
+
 class LoginTestCase(TestCase):
     def setUp(self):
         self.credentials = {
