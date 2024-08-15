@@ -39,20 +39,24 @@ class CustomUserCreationForm(UserCreationForm):
         model = User
         fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2')
 
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("Un utilisateur avec cette adresse e-mail existe déjà.")
+        return email
+
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.is_active = 0
+        user.is_active = 0  # Mettez à False si user.is_active est un BooleanField
         if commit:
             user.save()
-            
             UserProfile.objects.create(
                 user=user,
-                credits = 1,
+                credits=1,
                 parent_first_name=self.cleaned_data['parent_first_name'],
                 parent_last_name=self.cleaned_data['parent_last_name'],
                 current_class=self.cleaned_data['current_class']
             )
-            
         return user
 
 def compress_image(image_field):
@@ -108,6 +112,8 @@ class ExerciseForm(forms.ModelForm):
             'photo_answer': forms.ClearableFileInput(attrs={'multiple': False}),
         }
         labels = {
+            'title':'titre de l\'exercice',
+            'text':'texte d\'accompagnement',
             'photo_statement': 'Photo de l\'énoncé',
             'photo_answer': 'Photo de la réponse',
         }

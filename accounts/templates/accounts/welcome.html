@@ -1,13 +1,66 @@
-<!DOCTYPE html>
-<html>
-<head>
-    {% include 'accounts/base_style.html' %}
-    <title>Aide au devoirs</title>
-</head>
-<body>
-    <h1>Bienvenue sur aide au devoirs!</h1>
 
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Bienvenue sur [Nom de votre site]</title>
+        <!-- Importation de la police Quicksand depuis Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
+        <!-- Importation de Bootstrap CSS -->
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            body {
+                font-family: 'Quicksand', sans-serif;
+                background-color: #f9f9f9;
+                color: #333;
+                margin: 0;
+                padding: 20px;
+            }
+            h1 {
+                text-align: center;
+                color: #007bff;
+                margin-bottom: 30px;
+            }
+            .highlight {
+                font-weight: bold;
+                color: #007bff;
+            }
+            .important {
+                background-color: #fff3cd;
+                padding: 15px;
+                border-left: 5px solid #ffc107;
+                margin: 20px 0;
+                border-radius: 5px;
+            }
+        </style>
+    </head>
+    <body>
+    
+    <div class="container">
+        <h1>Bienvenue sur aide aux devoirs!</h1>
+    
+        <p class="lead">Nous sommes ravis de vous accueillir sur notre plateforme simple et intuitive dédiée à l'aide aux devoirs. Ici, vous pouvez déposer l'énoncé de votre exercice ainsi que votre réponse, et une correction détaillée vous sera fournie en général dans un délai de <span class="highlight"> 24 heures</span>, du lundi au samedi.</p>
+    
+        <p>Pour garantir la qualité de notre service, nous vous prions de bien vouloir vous assurer que les photos de vos énoncés et réponses soient <span class="highlight">claires et non floues</span>. Cela nous permet de vous offrir une correction précise et rapide.</p>
+    
+        <p>Un crédit équivaut à une correction. Lors de la soumission d'un exercice, votre solde est diminué d'un crédit. Vous pouvez à tout moment recharger vos crédit via le lien de paiment en ligne fourni.</p>
 
-    <p> Vous pouvez vous inscrire <a href="{% url 'register' %}">ici</a>.</p>
-</body>
-</html>
+        <div class="important">
+            <p><strong>Astuce :</strong> Utilisez votre ordinateur pour travailler et votre smartphone pour prendre en photo et poster vos énoncés et réponses sur le site. Cela rendra le processus plus fluide et efficace.</p>
+        </div>
+    
+        <p>Le site est accessible <span class="highlight">24h/24, 7j/7</span>, vous pouvez donc soumettre vos exercices à tout moment. Si vous avez des questions ou rencontrez des difficultés, n'hésitez pas à contacter notre <a href="mailto:contactaidedevoir@gmail.com">support client</a>, qui est là pour vous aider.</p>
+    
+        <p class="text-center">Bonne réussite dans vos études !</p>
+    </div>
+    <p class="text-center lead"> <strong>Le formulaire d'inscription au site se trouve <a href="{% url 'register' %}">ici</a>.</strong></p>
+    <p class="text-center"> <strong>Si vous avez déja un compte, vous pouvez vous identifier <a href="{% url 'login' %}">ici</a>.</strong></p>
+
+    <!-- Importation de Bootstrap JS et ses dépendances -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+    </html>
+    

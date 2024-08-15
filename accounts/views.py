@@ -266,3 +266,8 @@ def user_exercises(request, user_id):
     exercises = Exercise.objects.filter(user=user).order_by('-submission_date')
     context = {'exercises': exercises, 'user': user}
     return render(request, 'accounts/user_exercises.html', context)
+
+@login_required
+@user_passes_test(is_staff)
+def generate_audio(request):
+    return render(request, 'accounts/generate_audio.html')

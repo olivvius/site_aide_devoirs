@@ -4,10 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uploader un exercice</title>
-    <!-- Incorporation de Bootstrap via un CDN alternatif -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <!-- Styles personnalisés après Bootstrap pour éviter les conflits -->
     {% include 'accounts/base_style.html' %}
+    <style>
+        .form-group {
+            display: block;
+            margin-bottom: 1rem; /* Espace entre les form-group */
+        }
+        
+        .form-group label {
+            display: block; /* Assure que le label est sur une nouvelle ligne */
+            margin-bottom: 0.5rem; /* Espace entre le label et l'input */
+        }
+        
+        input, textarea, select {
+            width: 100%; /* Assure que les champs s'étendent sur toute la largeur */
+            box-sizing: border-box; /* La largeur inclut padding et border */
+        }
+        </style>
 </head>
 <body>
     <div class="container mt-4">
@@ -20,8 +34,8 @@
                 <button type="submit" class="btn btn-info">Se déconnecter</button>
             </form>
         </div>
-    <div class="container mt-4">
-        <h2 class="mb-4">Demander une correction</h2>
+    <div class="container mt-4 text-center">
+        <h2 class="mb-4 ">Demander une correction</h2>
         
         <!-- Affichage des messages d'erreur -->
         {% if error_message %}
@@ -30,7 +44,6 @@
             </div>
         {% endif %}
         
-        <!-- Formulaire upload fichier -->
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
@@ -50,7 +63,7 @@
                 {{ form.photo_answer }}
             </div>
             <button type="submit" class="btn btn-info">Soumettre</button>
-        </form>
+            </form>
     </div>
     <!-- jQuery et Popper.js via CDN obligatoire pour certains éléments de Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>

@@ -26,6 +26,5 @@ urlpatterns = [
     path('update-photos/<int:exercise_id>/', update_photos, name='update_photos'),
     path('user/<int:user_id>/exercises/', user_exercises, name='user_exercises'),
     path('contact/', contact, name='contact'),
-
-
+    path('generate_audio/', views.generate_audio, name='generate_audio'),
 ]

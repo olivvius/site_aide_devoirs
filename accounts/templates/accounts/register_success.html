@@ -2,9 +2,21 @@
 <html>
 <head>
     <title>Account Created</title>
+    <!-- Lien CDN pour Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Font - Quicksand -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 40px;
+            font-family: 'Quicksand', sans-serif; /* Applique la police Quicksand à tout le corps */
+        }
+    </style>
 </head>
-<body>
-    <h2>Account Created Successfully!</h2>
-    <p>Your account has been created. You can now <a href="{% url 'login' %}">log in</a>.</p>
+<body class="container">
+    <div class="jumbotron">
+        <h2 class="display-4">Votre compte est maintenant créé!</h2>
+        <p class="lead">Un administrateur validera votre inscription dans les prochains jours.</p>
+    </div>
 </body>
 </html>

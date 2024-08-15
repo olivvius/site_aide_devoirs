@@ -18,6 +18,7 @@
                         <form method="post" class="d-flex flex-column align-items-center">
                             {% csrf_token %}
                             {{ form.as_p }}
+                            <p>En vous inscrivant, vous acceptez les <a href="{% url 'CGV' %}">conditions générales de ventes</a>.</p>
                             <button type="submit" class="btn btn-info w-100">S'inscrire!</button>
                         </form>
                     </div>
