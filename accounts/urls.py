@@ -1,19 +1,19 @@
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
-from .views import increment_credits, decrement_credits, toggle_active, update_photos
+from .views import increment_credits, decrement_credits, toggle_active, update_photos, user_exercises, contact
 
 urlpatterns = [
     path('register/', views.register, name='register'),
+    path('CGV/', views.CGV, name='CGV'),
     path('login/', views.login_view, name='login'),
     path('register_success/', views.register_success, name='register_success'),
     path('dashboard/', views.dashboard, name='dashboard'),
-    path('welcome/', views.welcome, name='welcome'),
+    path('', views.welcome, name='welcome'),
     path('upload_exercise/', views.upload_exercise, name='upload_exercise'),
-    path('delete/<int:pk>/', views.delete_exercise, name='delete_exercise'),
     path('personal_infos/', views.personal_infos, name='personal_infos'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('admin/', views.admin_view, name='admin'),
+    path('admin_view/', views.admin_view, name='admin_view'),
     path('exercises_to_correct/', views.exercises_to_correct, name='exercises_to_correct'),
     path('corrected_exercises/', views.corrected_exercises, name='corrected_exercises'),
     path('user_profiles/', views.user_profiles_list, name='user_profiles_list'),
@@ -24,5 +24,8 @@ urlpatterns = [
     path('registration_pending/', views.registration_pending, name='registration_pending'),
     path('user/<int:user_id>/toggle-active/', toggle_active, name='toggle_active'),
     path('update-photos/<int:exercise_id>/', update_photos, name='update_photos'),
+    path('user/<int:user_id>/exercises/', user_exercises, name='user_exercises'),
+    path('contact/', contact, name='contact'),
+
 
 ]

@@ -10,18 +10,20 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1>Dashboard Admin</h1>
         <div class="d-flex justify-content-between mb-3">
-            <a href="{% url 'admin' %}" class="btn btn-info">Tableau de bord admin</a>
+            <a href="/admin/" class="btn btn-info me-2">Admin Django</a>
+            <a href="{% url 'admin_view' %}" class="btn btn-info">Tableau de bord admin</a>
             <a href="{% url 'exercises_to_correct' %}" class="btn btn-info">Exercices à corriger</a>
             <a href="{% url 'corrected_exercises' %}" class="btn btn-info">Exercices corrigés</a>
             <a href="{% url 'user_profiles_list' %}" class="btn btn-info">Liste des utilisateurs</a>
         </div>
+        <h1>Dashboard Admin</h1>
 
         <h2>Statistiques</h2>
         <ul>
             <li>Nombre total d'exercices : {{ total_exercises }}</li>
             <li>Nombre d'exercices restant à corriger : {{ exercises_to_correct }}</li>
+            <li>Nombre d'exercices en attente de modification : {{ exercises_pending }}</li>
             <li>Nombre d'exercices corrigés aujourd'hui : {{ exercises_corrected_today }}</li>
             <li>Nombre d'exercices corrigés cette semaine : {{ exercises_corrected_this_week }}</li>
             <li>Nombre d'exercices corrigés ce mois-ci : {{ exercises_corrected_this_month }}</li>

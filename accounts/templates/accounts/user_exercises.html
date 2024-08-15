@@ -1,30 +1,31 @@
+<!-- templates/accounts/user_exercises.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exercices corrigés </title>
-    <!-- Inclusion de Bootstrap CSS -->
-    {% include 'accounts/base_style.html' %}
+    <title>Exercices de {{ user.username }}</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container mt-5">
         <div class="d-flex justify-content-between mb-3">
-            <a href="{% url 'admin_view' %}" class="btn btn-info">Tableau de bord admin</a>
+            <a href="{% url 'admin' %}" class="btn btn-info">Tableau de bord admin</a>
             <a href="{% url 'exercises_to_correct' %}" class="btn btn-info">Exercices à corriger</a>
-            <a href="{% url 'corrected_exercises' %}" class="btn btn-info">Exercices corrigés</a>
+            <a href="{% url 'corrected_exercises' %}" class="btn btn-info me-2">Exercices corrigés</a>
             <a href="{% url 'user_profiles_list' %}" class="btn btn-info">Liste des utilisateurs</a>
         </div>
-        <h1>Liste des Exercices corrigés</h1>
+        <h1>Exercices soumis par {{ user.username }}</h1>
+        <br></br>
         <table class="table table-bordered table-striped">
             <thead class="thead-dark">
                 <tr>
                     <th>ID</th>
-                    <th>Utilisateur</th>
                     <th>Titre</th>
                     <th>Description</th>
                     <th>Date de Soumission</th>
+                    <th>Etat</th>
                     <th>Date de correction</th>
                     <th>Actions</th>
                 </tr>
@@ -33,10 +34,10 @@
                 {% for exercise in exercises %}
                 <tr>
                     <td>{{ exercise.id }}</td>
-                    <td>{{ exercise.user.username }}</td>
                     <td>{{ exercise.title }}</td>
                     <td>{{ exercise.text }}</td>
                     <td>{{ exercise.submission_date|date:"d/m/Y à H:i" }}</td>
+                    <td>{{ exercise.corrected }}</td>
                     <td>{{ exercise.correction_date|date:"d/m/Y à H:i" }}</td>
                     <td>
                         <a href="{% url 'correct_exercise' exercise.id %}" class="btn btn-info btn-sm">Voir</a>
@@ -44,15 +45,11 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="6">Aucun exercice corrigés</td>
+                    <td colspan="5">Aucun exercice trouvé.</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-    <!-- Inclusion de Bootstrap JS et des dépendances -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

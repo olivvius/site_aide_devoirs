@@ -2,7 +2,8 @@ db.sqlite3
 db_BACKUP.sqlite3
 djangoenv
 A_FAIRE.txt
-mdp.txt
+ident_keys.txt
 PALETTE.txt
 test_media
 media
+fichiers_test

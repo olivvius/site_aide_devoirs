@@ -33,46 +33,40 @@
                 <button class="btn btn-danger" disabled>Pas assez de crédit pour déposer une demande</button>
             {% endif %}
             <a href="{% url 'personal_infos' %}" class="btn btn-info">Accès info persos</a>
-            <i class="fas fa-bell fa-2x"></i>
             <form action="{% url 'logout' %}" method="post" class="form-inline">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-info">Se déconnecter</button>
             </form>
-           
-
         </div>
-
+        <br></br>
         <h3>Vos Exercices</h3>
-        <div class="row mb-3 font-weight-bold">
-            <div class="col-md-1 vertical-divider">Titre</div>
-            <div class="col-md-3 vertical-divider">Texte</div>
-            <div class="col-md-3 vertical-divider">Photo</div>
+        <div class="row mb-3 font-weight-bold text-center"> <!-- Ajouter text-center ici -->
+            <div class="col-md-2 vertical-divider">Titre</div>
+            <div class="col-md-4 vertical-divider">Texte</div>
             <div class="col-md-2 vertical-divider">Date de création</div>
-            <div class="col-md-1 vertical-divider">Correction</div>
+            <div class="col-md-2 vertical-divider">Correction</div>
             <div class="col-md-2">Action</div> <!-- Ajout d'une nouvelle colonne pour les actions -->
         </div>
         <div class="bordered">
             <ul class="list-unstyled">
                 {% for exercise in exercises %}
                 <li class="horizontal-divider">
-                    <div class="row py-2">
-                        <div class="col-md-1 vertical-divider">{{ exercise.title }}</div>
-                        <div class="col-md-3 vertical-divider">{{ exercise.text }}</div>
-                        <div class="col-md-3 vertical-divider">
-                            <img src="{{ exercise.photo_statement.url }}" alt="Photo de l'énoncé" class="img-fluid">
-                        </div>
+                    <div class="row py-2 text-center"> <!-- Ajouter text-center ici -->
+                        <div class="col-md-2 vertical-divider">{{ exercise.title }}</div>
+                        <div class="col-md-4 vertical-divider">{{ exercise.text }}</div>
                         <div class="col-md-2 vertical-divider">{{ exercise.submission_date|date:"d/m/Y à H:i" }}</div>
-                        <div class="col-md-1 vertical-divider">{{ exercise.corrected|yesno:"Oui,Non" }}</div>
+                        <div class="col-md-2 vertical-divider">{{ exercise.corrected }}</div>
                         <div class="col-md-2">
                             <a href="{% url 'exercise_detail' exercise.id %}" class="btn btn-info">Accéder à l'Exercice</a>
                         </div> <!-- Ajout d'un bouton pour accéder à l'exercice -->
                     </div>
                 </li>
                 {% empty %}
-                <li>Aucun exercice téléchargé.</li>
+                <li class="text-center">Aucun exercice téléchargé.</li> <!-- Centrer le texte ici aussi -->
                 {% endfor %}
             </ul>
         </div>
+        
         
     </div>
     <!-- Bootstrap JS Bundle with Popper -->

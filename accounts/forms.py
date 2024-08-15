@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Exercise, UserProfile
+from .models import Exercise, UserProfile, CLASS_CHOICES
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 import uuid
@@ -11,18 +11,6 @@ from PIL import Image, ImageOps
 import io
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.exceptions import ValidationError
-
-CLASS_CHOICES = [
-    ('6e', '6ème'),
-    ('5e', '5ème'),
-    ('4e', '4ème'),
-    ('3e', '3ème'),
-    ('2nd', 'Seconde'),
-    ('1er', 'Première'),
-    ('Terminale', 'Terminale'),
-    ('Post Bac', 'Post Bac'),
-    ('Autre', 'Autre'),
-]
 
 class CustomAuthenticationForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'nom utilisateur'}))
@@ -42,17 +30,7 @@ class CustomUserCreationForm(UserCreationForm):
         widget=forms.TextInput(attrs={'placeholder': 'Nom du parent'})
     )
     current_class = forms.ChoiceField(
-        choices=[
-            ('6e', '6ème'),
-            ('5e', '5ème'),
-            ('4e', '4ème'),
-            ('3e', '3ème'),
-            ('2nd', 'Seconde'),
-            ('1er', 'Première'),
-            ('Terminale', 'Terminale'),
-            ('Post Bac', 'Post Bac'),
-            ('Autre', 'Autre'),
-        ],
+        choices=CLASS_CHOICES,
         label='Classe Actuelle',
         widget=forms.Select(attrs={'placeholder': 'Choisir une classe'})
     )
@@ -66,17 +44,15 @@ class CustomUserCreationForm(UserCreationForm):
         user.is_active = 0
         if commit:
             user.save()
-            # Création du profil utilisateur une fois que l'utilisateur est sauvegardé 
-            # pour assurer que le User est disponible et éviter l'erreur d'intégrité.
             
             UserProfile.objects.create(
                 user=user,
+                credits = 1,
                 parent_first_name=self.cleaned_data['parent_first_name'],
                 parent_last_name=self.cleaned_data['parent_last_name'],
                 current_class=self.cleaned_data['current_class']
             )
             
-
         return user
 
 def compress_image(image_field):
@@ -107,7 +83,6 @@ def compress_image(image_field):
         )
     except Exception as e:
         print(f"An error occurred during image compression: {e}")
-        # If an error occurs, save the original file as JPEG
         image = Image.open(image_field)
         image = image.convert('RGB')
         output_stream = io.BytesIO()
@@ -204,22 +179,31 @@ class UserProfileForm(forms.ModelForm):
 class CorrectionForm(forms.ModelForm):
     class Meta:
         model = Exercise
-        fields = ['text_correction', 'photo_correction', 'corrected']
+        fields = ['text_correction', 'photo_correction', 'audio_correction', 'corrected']
         labels = {
             'text_correction': 'Texte de correction',
             'photo_correction': 'Photo de correction',
+            'audio_correction': 'Correction Audio',
             'corrected': 'Corrigé'
         }
         widgets = {
             'text_correction': forms.Textarea(attrs={'rows': 4}),
             'photo_correction': forms.ClearableFileInput(attrs={'multiple': False}),
-            'corrected': forms.Select(choices=[(False, 'Non'), (True, 'Oui')])
+            'audio_correction': forms.FileInput(),
+            'corrected': forms.Select(choices=[(False, 'non'), (True, 'oui')])
         }
 
     def save(self, commit=True):
         instance = super(CorrectionForm, self).save(commit=False)
+        
         if 'photo_correction' in self.files:
-            instance.photo_correction.name = f"{uuid.uuid4()}.{self.files['photo_correction'].name.split('.')[-1]}"
+                compressed_image = compress_image(self.files['photo_correction'])
+                instance.photo_correction.save(f"{uuid.uuid4()}.jpg", compressed_image, save=False)
+
+        if 'audio_correction' in self.files:
+            extension = self.files['audio_correction'].name.split('.')[-1]
+            unique_filename = f"{uuid.uuid4()}.{extension}"
+            instance.audio_correction.name = unique_filename
 
         if instance.corrected and instance.correction_date is None:
             instance.correction_date = timezone.now()
@@ -227,3 +211,8 @@ class CorrectionForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+    
+class ContactForm(forms.Form):
+    name = forms.CharField(max_length=100)
+    email = forms.EmailField()
+    message = forms.CharField(widget=forms.Textarea)

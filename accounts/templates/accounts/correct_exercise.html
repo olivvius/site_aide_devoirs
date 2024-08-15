@@ -4,15 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Corriger un Exercice</title>
-    <!-- Inclusion de Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     {% include 'accounts/base_style.html' %}
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container mt-5">
+        <a href="{% url 'admin_view' %}" class="btn btn-info me-2">Tableau de bord admin</a>
+        <a href="{% url 'exercises_to_correct' %}" class="btn btn-info me-2">Exercices à corriger</a>
+        <a href="{% url 'corrected_exercises' %}" class="btn btn-info me-2">Exercices corrigés</a>
+        <a href="{% url 'user_profiles_list' %}" class="btn btn-info">Liste des utilisateurs</a>
+        <a href="{% url 'user_exercises' exercise.user.id %}" class="btn btn-info">Exercices de l'utilisateur</a>
+
+        <br></br>
         <div class="card">
             <div class="card-header">
-                <h2>Corriger un Exercice</h2>
+                <h2>Corriger Exercice de {{ exercise.user.username }}</h2>
             </div>
             <div class="card-body">
                 <h4>{{ exercise.title }}</h4>
@@ -20,14 +27,51 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <h4>Enoncé</h4>
+                        {% if exercise.photo_statement %}
                         <img src="{{ exercise.photo_statement.url }}" alt="Photo de l'énoncé" class="img-fluid img-thumbnail">
+                        <a href="{{ exercise.photo_statement.url }}" download class="btn btn-info">
+                            <i class="fas fa-download"></i>
+                        </a>
+                        {% else %}
+                        <p>Pas d'énoncé.</p>
+                    {% endif %}
                     </div>
                     <div class="col-md-6">
                         <h4>Réponse</h4>
                         {% if exercise.photo_answer %}
                             <img src="{{ exercise.photo_answer.url }}" alt="Photo de la réponse" class="img-fluid img-thumbnail">
+                            <a href="{{ exercise.photo_answer.url }}" download class="btn btn-info">
+                                <i class="fas fa-download"></i>
+                            </a>
                         {% else %}
                             <p>Pas de réponse.</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-mb-3">
+                    <h4>Photo de correction</h4>
+                    {% if exercise.photo_correction %}
+                        <img src="{{ exercise.photo_correction.url }}" alt="Photo de correction" class="img-fluid img-thumbnail">
+                        <a href="{{ exercise.photo_correction.url }}" download class="btn btn-info">
+                            <i class="fas fa-download"></i>
+                        </a>
+                    {% else %}
+                        <p>Pas de photo de correction.</p>
+                    {% endif %}
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <h4>Audio de correction</h4>
+                        {% if exercise.audio_correction %}
+                            <audio controls>
+                                <source src="{{ exercise.audio_correction.url }}" type="audio/mpeg">
+                                Votre navigateur ne supporte pas l'élément audio.
+                            </audio>
+                            <a href="{{ exercise.audio_correction.url }}" download class="btn btn-info">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        {% else %}
+                            <p>Pas d'audio de correction.</p>
                         {% endif %}
                     </div>
                 </div>
@@ -37,7 +81,6 @@
 
                     <button type="submit" class="btn btn-info">Soumettre la correction</button>
                 </form>
-                <a href="{% url 'exercises_to_correct' %}" class="btn btn-info mt-2">Retour aux exercices à corriger</a>
             </div>
         </div>
     </div>

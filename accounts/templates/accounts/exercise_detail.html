@@ -5,59 +5,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Détail de l'Exercice</title>
     {% include 'accounts/base_style.html' %}
-
-    <!-- Inclusion de Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container mt-5">
+    <div style="margin-left: 4%; margin-right: 4%;">
         <a href="{% url 'dashboard' %}" class="btn btn-info">Retour au dashboard</a>
-        <div class="card">
-            <div class="card-header">
-                <h2>{{ exercise.title }}</h2>
-            </div>
+        <br><br>
+        <div class="card card-custom">
             <div class="card-body">
-                <p>{{ exercise.text }}</p>
+                <!-- Première section : Titre, Texte et État de correction -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <h2>{{ exercise.title }}</h2>
+                    </div>
+                    <div class="col-md-4">
+                        <p>{{ exercise.text }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Corrigé:</strong> {{ exercise.corrected }}
+                    </div>
+                </div>
+                <br></br>
+                <div style="height: 8px; background-color: #17A8B0;"></div>
+                <br></br>
+                <!-- Deuxième section : Photos des énoncés et des réponses -->
                 <form action="{% url 'update_photos' exercise.id %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <h4>Énoncé</h4>
-                            {% if exercise.photo_statement %} 
-                                <img src="{{ exercise.photo_statement.url }}" alt="Photo de l'énoncé" class="img-fluid img-thumbnail">
-                            {% else %}
-                                <p>Aucune photo d'énoncé disponible.</p>
-                            {% endif %}
+                <h1 class="text-center">Exercice</h1>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <h4 class="text-center">Énoncé</h4>
+                        {% if exercise.photo_statement %} 
+                            <img src="{{ exercise.photo_statement.url }}" alt="Photo de l'énoncé" class="img-fluid img-thumbnail">
+                            <a href="{{ exercise.photo_statement.url }}" download class="btn btn-info">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        {% else %}
+                            <p>Aucune photo d'énoncé disponible.</p>
+                        {% endif %}
+                        {% if exercise.corrected != "oui" %}
                             <label for="id_photo_statement">Modifier l'énoncé</label>
                             <input type="file" name="photo_statement" id="id_photo_statement">
-                        </div>
-                        <div class="col-md-6">
-                            <h4>Réponse</h4>
-                            {% if exercise.photo_answer %}
-                                <img src="{{ exercise.photo_answer.url }}" alt="Photo de la réponse" class="img-fluid img-thumbnail">
-                            {% else %}
-                                <p>Pas de réponse.</p>
-                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="text-center">Réponse</h4>
+                        {% if exercise.photo_answer %}
+                            <img src="{{ exercise.photo_answer.url }}" alt="Photo de la réponse" class="img-fluid img-thumbnail">
+                            <a href="{{ exercise.photo_answer.url }}" download class="btn btn-info">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        {% else %}
+                            <p>Pas de réponse.</p>
+                        {% endif %}
+                        {% if exercise.corrected != "oui" %}
                             <label for="id_photo_answer">Modifier la réponse</label>
                             <input type="file" name="photo_answer" id="id_photo_answer">
-                        </div>
+                        {% endif %}
                     </div>
-
-                    <button type="submit" class="btn btn-info">modifier les photos</button>
+                </div>
+                {% if exercise.corrected != "oui" %}
+                    <button type="submit" class="btn btn-info">modifier énoncé / réponse</button>
+                {% endif %}
                 </form>
-                <p><strong>Corrigé:</strong> {{ exercise.corrected|yesno:"Oui,Non" }}</p>
-                <!-- Section de Correction -->
+                <br></br>
+                <div style="height: 8px; background-color: #17A8B0;"></div>
+                <br></br>
+                <!-- Troisième section : Détails de la correction -->
+                 <h1 class="text-center">Correction</h1>
                 <div class="row mb-3">
-                    <div class="col-md-12">
-                        <h4>Texte de correction</h4>
-                        <p>{{ exercise.text_correction }}</p>
-                    </div>
-                    <div class="col-md-12">
-                        <h4>Photo de correction</h4>
+                    <div class="col-md-6">
                         {% if exercise.photo_correction %}
                             <img src="{{ exercise.photo_correction.url }}" alt="Photo de correction" class="img-fluid img-thumbnail">
+                            <a href="{{ exercise.photo_correction.url }}" download class="btn btn-info">
+                                <i class="fas fa-download"></i>
+                            </a>
                         {% else %}
                             <p>Pas de photo de correction.</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <p>{{ exercise.text_correction }}</p>
+                        {% if exercise.audio_correction %}
+                            <audio controls>
+                                <source src="{{ exercise.audio_correction.url }}" type="audio/mpeg">
+                                Votre navigateur ne supporte pas l'élément audio.
+                            </audio>
+                            <a href="{{ exercise.audio_correction.url }}" download class="btn btn-info">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        {% else %}
+                            <p>Pas d'audio de correction.</p>
                         {% endif %}
                     </div>
                 </div>

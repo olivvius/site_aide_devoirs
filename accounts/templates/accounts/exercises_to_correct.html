@@ -11,7 +11,7 @@
 <body>
     <div class="container mt-5">
         <div class="d-flex justify-content-between mb-3">
-            <a href="{% url 'admin' %}" class="btn btn-info">Tableau de bord admin</a>
+            <a href="{% url 'admin_view' %}" class="btn btn-info">Tableau de bord admin</a>
             <a href="{% url 'exercises_to_correct' %}" class="btn btn-info">Exercices à corriger</a>
             <a href="{% url 'corrected_exercises' %}" class="btn btn-info me-2">Exercices corrigés</a>
             <a href="{% url 'user_profiles_list' %}" class="btn btn-info">Liste des utilisateurs</a>
@@ -25,7 +25,9 @@
                     <th>Titre</th>
                     <th>Description</th>
                     <th>Date de Soumission</th>
+                    <th>Etat</th>
                     <th>Actions</th>
+                    <th>Exercices de l'utilisateur</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,8 +38,12 @@
                     <td>{{ exercise.title }}</td>
                     <td>{{ exercise.text }}</td>
                     <td>{{ exercise.submission_date|date:"d/m/Y à H:i" }}</td>
+                    <td>{{ exercise.corrected }}</td>
                     <td>
-                        <a href="{% url 'correct_exercise' exercise.id %}" class="btn btn-primary btn-sm">Corriger</a>
+                        <a href="{% url 'correct_exercise' exercise.id %}" class="btn btn-info btn-sm">Voir</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'user_exercises' exercise.user.id %}" class="btn btn-info btn-sm">Voir exercices</a>
                     </td>
                 </tr>
                 {% empty %}
